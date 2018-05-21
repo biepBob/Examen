@@ -1,3 +1,9 @@
+
+//Ivan-Jago Coric
+//Jana Christopher
+//Stefan Koekkoek
+//
+//
 #include "Neuron.h"
 
 neuron::neuron(const vector<float>& WeightVector, const float& BiasNumber) //constructor 1
@@ -11,11 +17,11 @@ neuron::neuron(const int& WeightVectorSize) //constructor 2
 {
 	setNumberOfInputs(WeightVectorSize);
 	Weights.resize(WeightVectorSize);
-	float OptimalInterval = 1 / float(sqrt(NumberOfInputs)); //Optimal interval according to Xavier initialization
+	float OptimalInterval = 1/float(sqrt(NumberOfInputs)); //Optimal interval according to Xavier initialization
 	std::generate(Weights.begin(), Weights.end(), //generates random weights using algorithms and lambda function
 		[&]() {
 		//return randomize(-1, 1);
-		return randomize(-OptimalInterval, OptimalInterval);
+		return randomize(-OptimalInterval,OptimalInterval);
 	});
 
 	//Bias = randomize(-1, 1);
@@ -90,9 +96,10 @@ const int neuron::getNumberOfInputs()
 	return NumberOfInputs; //returns the number of inputs for the neurons
 }
 
-void neuron::sigmoid(float& z)
+float neuron::sigmoid(const float& z)
 {
-	z = 1 / (1 + exp(-z)); // sigmoid function
+
+	return  1/ (1 + exp(-z)); // sigmoid function
 
 }
 
@@ -106,13 +113,13 @@ float neuron::dsigmoid()
 void neuron::activateFunc(const vector<float>& input)
 {
 	Output = 0;
-	Output = std::inner_product(Weights.begin(), Weights.end(), input.begin(), Bias); //std algorithm to calculate the inner product, i.e. sum of products
+	Output = std::inner_product(Weights.begin(), Weights.end(), input.begin(),Bias) ; //std algorithm to calculate the inner product, i.e. sum of products
 
 }
 
 float neuron::resultFunc(const vector<float>& input) //calculates the output of a neuron
 {
 	activateFunc(input);
-	sigmoid(Output);
-	return  Output;
+	Output = sigmoid(Output);
+    	return Output;
 }
