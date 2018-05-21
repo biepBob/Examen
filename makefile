@@ -14,28 +14,28 @@ ROOT2 = $(shell root-config --libs)
 .PHONY: all clean
 
 
-all: TestPropagate testPropagateMain.o propagate.o Network.o Layer.o Neuron.o batch.o testimage.o
+all: TestPropagateinterface propagate.o Network.o Layer.o Neuron.o batch.o testimage.o
 
 
 TestPropagateinterface: testPropagateinterfaceMain.o propagateinterface.o propagate.o propagateRoot.o Network.o Layer.o Neuron.o batch.o testimage.o
 	$(COMPILER) $^ ${LDLIBS} ${ROOT2} -lTMVA ${CPPFLAGS} ${ROOT1} ${CPPFLAGS} -o $@
 
-TestPropagate: testPropagateMain.o propagate.o Network.o Layer.o Neuron.o batch.o testimage.o
-	$(COMPILER) $^ ${LDLIBS} ${CPPFLAGS} -o $@
+#TestPropagate:  propagate.o Network.o Layer.o Neuron.o batch.o testimage.o
+#	$(COMPILER) $^ ${LDLIBS} ${CPPFLAGS} -o $@
 
-TestNetwork: testNetworkMain.o Network.o Layer.o Neuron.o
-	$(COMPILER) $^ -o $@
+#TestNetwork: t Network.o Layer.o Neuron.o
+	#$(COMPILER) $^ -o $@
 
 testPropagateinterfaceMain.o: testPropagateinterfaceMain.cpp propagateinterface.h
 	$(COMPILER) -c testPropagateinterfaceMain.cpp ${ROOT2} -lTMVA ${ROOT1} -o $@
 
-testPropagateMain.o: testPropagateMain.cpp propagate.h
-	$(COMPILER) -c testPropagateMain.cpp -o $@
+#testPropagateMain.o: testPropagateMain.cpp propagate.h
+#	$(COMPILER) -c testPropagateMain.cpp -o $@
 
-testNetworkMain.o: testNetworkMain.cpp Network.h
-	$(COMPILER) -c testNetworkMain.cpp -o $@
+#testNetworkMain.o: testNetworkMain.cpp Network.h
+	#$(COMPILER) -c testNetworkMain.cpp -o $@
 
-propagateinterface.o: propagateinterface.cpp propagateinterface.h propagate.h propagateRoot.h Network.h batch.h
+propagateinterface.o: propagateinterface.cpp propagateinterface.h propagate.h  propagateRoot.h Network.h batch.h
 	$(COMPILER) -c propagateinterface.cpp ${ROOT2} -lTMVA ${ROOT1} -o $@
 
 propagateRoot.o: propagateRoot.cpp propagateRoot.h
