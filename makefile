@@ -60,5 +60,5 @@ testimage.o: testimage.cpp testimage.h
 	$(COMPILER) -c testimage.cpp ${LDLIBS} ${CPPFLAGS} -o $@
 
 clean : 
-	rm *.o TestPropagate TestPropagateinterface
+	rm *.o TestPropagateinterface
 
