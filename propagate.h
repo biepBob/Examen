@@ -19,13 +19,11 @@ void printVec(const vector<vector<vector<float>>>& multivec);
 
 class propagate{
 	public:
-		propagate(float E, int Size,const vector<int>& nNeurons, const int nInputs,  const string EvalImageString, const string EvalLabelString, const string TrainImageString,const string 				TrainLabelString); // constructor 1
-		propagate(const string fileName, float E, int Size,  const string EvalImageString, const string EvalLabelString, const string TrainImageString,const string 				TrainLabelString); // constructor 2
+		propagate(float E, int Size,const vector<int>& nNeurons, const int nInputs,  const string EvalImageString, const string EvalLabelString, const string TrainImageString, const string TrainLabelString); // constructor 1
+		propagate(const string fileName, float E, int Size,  const string EvalImageString, const string EvalLabelString, const string TrainImageString, const string TrainLabelString); // constructor 2
 		~propagate(); // destuctor
-		propagate(const propagate& prop);// copyconstructor
-		propagate& operator = (const propagate& net); // Assignment constructor
 
-		void setEta(float);
+		void setEta(float);		// Set the value of the learning rate 'Eta'
 		void setMiniBatchSize(int);
 		void setThreshold(float);
 		
@@ -54,7 +52,6 @@ class propagate{
 		void propagateMiniBatch();
 		void deriveWeightsAndBias(const vector<vector<float>>&, const vector<vector<vector<float>>>&);	// Adjust the biases and weights of the network by a gradient descend method
 	
-	
 		// Data members
 		float Eta;		// Learning rate 'eta'
 		int MiniBatchSize;	// Number of training sets in a minibatch
@@ -66,7 +63,6 @@ class propagate{
 		
 		vector<int> ChooseTrainingSample;
 		
-		
 		network CurrentNetwork;	// The network that is being trained
 		
 		batch EvaluationBatch;
@@ -74,7 +70,10 @@ class propagate{
 		vector<shared_ptr<testimage>> TrainImages;	// datamember -> Only need to get the images once
 		vector<shared_ptr<testimage>> EvalImages;	// datamember -> Only need to get the images once
 		
-
+	private:
+		propagate(const propagate& prop);		// copyconstructor
+		propagate& operator = (const propagate& net); 	// Assignment constructor
+	
 };
 
 #endif
