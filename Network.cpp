@@ -163,7 +163,7 @@ vector<vector<vector<float>>> network::loadLayers(const string fileName) //Funct
         
 	//Evaluating the dimensions of the loaded file        
         vector<float> Dimens = dataFloat.at(0).at(0);
-	//int NInputs = Dimens.at(0);
+	
 	size_t NLayers1 = Dimens.at(1);
         size_t NLayers2 = Dimens.size()-2;
         
