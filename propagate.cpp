@@ -15,9 +15,7 @@ void setAllElementsToOneValue(vector<vector<float>>& multivec, const float value
 {
 	for_each(multivec.begin(),multivec.end(),[&](vector<float>& lowervec)		
 		{
-			fill(lowervec.begin(),lowervec.end(),value);
-			//copy(lowervec.begin(),lowervec.end()-1,ostream_iterator<float>(cout,","));	
-			//cout << lowervec.back() << '\n';						
+			fill(lowervec.begin(),lowervec.end(),value);						
 		});	
 }
 
@@ -27,9 +25,7 @@ void setAllElementsToOneValue(vector<vector<vector<float>>>& multivec, const flo
 		{
 			for_each(lower1vec.begin(),lower1vec.end(),[&](vector<float>& lower2vec)
 			{
-				fill(lower2vec.begin(),lower2vec.end(),value);
-				//copy(lower2vec.begin(),lower2vec.end()-1,ostream_iterator<float>(cout,","));	
-				//cout << lower2vec.back() << '\n';				
+				fill(lower2vec.begin(),lower2vec.end(),value);				
 			});
 		});
 }
@@ -62,7 +58,7 @@ void printVec(const vector<vector<vector<float>>>& multivec)
 // propagate ==========================================================
 //=====================================================================
 propagate::propagate(float eta, int miniBatchSize,const vector<int>& nNeurons, const int nInputs, const string EvalImageString, const string EvalLabelString, const string TrainImageString,const string TrainLabelString) // constructor
-:CurrentNetwork(nNeurons,nInputs),EvaluationBatch(EvalImageString,EvalLabelString),TrainingBatch(TrainImageString,TrainLabelString)
+:CurrentNetwork(nNeurons,nInputs),TrainingBatch(TrainImageString,TrainLabelString),EvaluationBatch(EvalImageString,EvalLabelString)
 { 
     setEta(eta);
     setMiniBatchSize(miniBatchSize);
@@ -72,7 +68,7 @@ propagate::propagate(float eta, int miniBatchSize,const vector<int>& nNeurons, c
 }
 
 propagate::propagate(const string fileName, float eta, int miniBatchSize,  const string EvalImageString, const string EvalLabelString, const string TrainImageString,const string TrainLabelString) // constructor
-:CurrentNetwork(fileName),EvaluationBatch(EvalImageString,EvalLabelString),TrainingBatch(TrainImageString,TrainLabelString)
+:CurrentNetwork(fileName),TrainingBatch(TrainImageString,TrainLabelString),EvaluationBatch(EvalImageString,EvalLabelString)
 { 
     setEta(eta);
     setMiniBatchSize(miniBatchSize);
