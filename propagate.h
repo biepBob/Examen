@@ -63,7 +63,7 @@ class propagate{
 		
 		vector<int> ChooseTrainingSample;	// Vector that is used to select a random training sample
 		
-		network CurrentNetwork;	// The network that is being trained
+		network CurrentNetwork;		// The network that is being trained
 		
 		batch TrainingBatch;		// Contains the training images of the MINST database
 		batch EvaluationBatch;		// Contains the evaluation (test) images of the MINST database
@@ -71,9 +71,8 @@ class propagate{
 		vector<shared_ptr<testimage>> EvalImages;	// Contains the pixel values and number it represents of each evaluate (test) image
 		
 	private:
-		propagate(const propagate& prop);		// copyconstructor
+		propagate(const propagate& prop);		// copy constructor
 		propagate& operator = (const propagate& net); 	// Assignment constructor
 	
 };
-
 #endif
