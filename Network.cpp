@@ -13,7 +13,6 @@
 
 //Author: Robbe (& Marjan)=========================================================================
 
-
 //Constructor for the network class when Weights and biases are loaded from a file
 network::network(const string fileName)
 {
@@ -25,12 +24,10 @@ network::network(const string fileName)
 	}
 }
 
-
 network::network(const vector<int>& nNeurons, const int nInputs)	//Constructor for the network class when random weights and biases are chosen
 {
 	NumberofLayers = nNeurons.size();
-	//bool input = false;
-
+	
 	Layers.push_back(layer(nNeurons.at(0),nInputs));	// First layer of neurons (each neuron gets 'nInputs' input values) 
 	for(int i=1; i < NumberofLayers; ++i)			//Iterates over the layers of the network
 	{ 
@@ -49,7 +46,6 @@ network::network(const network& net)	//Copy constructor
 { 
 	Layers = net.Layers;
 	NumberofLayers = net.NumberofLayers;
-	//NetworkHasChanged  = net.NetworkHasChanged;
 }
 
 network& network::operator = (const network& net) //Assigment operator (constructor)
@@ -58,7 +54,6 @@ network& network::operator = (const network& net) //Assigment operator (construc
 	{
 		Layers = net.Layers;
 		NumberofLayers = net.NumberofLayers;
-		//NetworkHasChanged  = net.NetworkHasChanged;
 	}
 	return *this;
 }
@@ -68,22 +63,20 @@ network& network::operator = (const network& net) //Assigment operator (construc
 
 void network::setWeights(const vector<vector<vector<float>>>& NetworkWeights)	// sets weights for every layer
 {
-
 	int count = 0;
-	for_each(Layers.begin(), Layers.end(),		// For each layer i in the 'Layers' vector
-		[&](layer& Layer) {			// change their weights to one of layer i of 'NetworkWeights'.
+	for_each(Layers.begin(),Layers.end(),[&](layer& Layer)	// For each layer i in the 'Layers' vector
+		{							// change their weights to one of layer i of 'NetworkWeights'.
 			Layer.setWeights(NetworkWeights.at(count++));	// Here is the post-increment of 'count' usefull.
-	});
+		});
 }
 
 void network::setBias(const vector<vector<float>>& NetworkBias)	// sets biases for every layer
 {
-
 	int count = 0;
-	for_each(Layers.begin(), Layers.end(),		// For each layer i in the 'Layers' vector
-		[&](layer& Layer) {			// change their biases to one of layer i of 'NetworkBias'.
+	for_each(Layers.begin(),Layers.end(),[&](layer& Layer)	// For each layer i in the 'Layers' vector
+		 {						// change their biases to one of layer i of 'NetworkBias'.
 			Layer.setBias(NetworkBias.at(count++));	// Here is the post-increment of 'count' usefull.
-	});
+		 });
 }
 
 void network::setNumberofLayers(const int NLayers)	// sets amount of layers in the network
@@ -95,7 +88,8 @@ vector<vector<vector<float>>> network::getWeights()
 {
 	vector<vector<vector<float>>> weights;
 	
-	for(int i=0; i < NumberofLayers; ++i){
+	for(int i=0; i < NumberofLayers; ++i)
+	{
 		weights.push_back((Layers.at(i)).getWeights());
 	}
 	return weights;
@@ -104,7 +98,8 @@ vector<vector<vector<float>>> network::getWeights()
 vector<vector<float>> network::getBias()
 {
 	vector<vector<float>> bias;
-	for(int i=0; i < NumberofLayers; ++i){
+	for(int i=0; i < NumberofLayers; ++i)
+	{
 		bias.push_back((Layers.at(i)).getBias());
 	}
 	return bias;
@@ -114,7 +109,6 @@ int network::getNumberofLayers() const
 {
 	return NumberofLayers;
 }
-
 
 vector<vector<float>> network::getLayerResult() 
 {
@@ -127,7 +121,6 @@ vector<vector<float>> network::getLayerResult()
 
 vector<vector<vector<float>>> network::loadLayers(const string fileName) //Function to load already exsisting weights and bias
 {
-	
 //Load values from a CSV-file as a vector of vectors of strings
         ifstream file(fileName);
         vector<vector<string>> dataString;
@@ -218,7 +211,6 @@ return dataFloat;
 //Author: Tycho=========================================================================
 void network::saveLayers(const string fileName)
 {      
-
 	const char* commaDelim = ",";						// used as delimiter between biases of the same layer and weights of the same neuron
 	const char* newLineDelim = "\n";					// end of line character
 	const size_t nInputs = getWeights().front().front().size(); 		// # weights of first neuron of first layer = # inputs of network
@@ -280,32 +272,20 @@ vector<vector<float>> network::errorFunc(const vector<float>& y)// calculates er
 	vector<float> avl = A.at(NumberofLayers-1); 		// input last layer (output second last layer)
 	vector<float> Dll;					// errorfunc last layer
 
-	//cout << "Calculation error function last layer" << endl;
-	//layer L = Layers.at(NumberofLayers-1);  // call last layer of vector of layers
 	for (unsigned int i=0; i<all.size(); ++i) // loop over neurons last layer
 	{ 
-		//neuron N = L.Neurons.at(i); // call i-th neuron out of vector of neurons of layer l
-		//N.setBias(bll.at(i)); // set bias of i-th neuron in layer l
-		//N.setWeights(wll.at(i)); // set weights of i-th neuron in layer l			
-		//N.activateFunc(avl);  // call activateFunc to calculate z 
 		float x = (all.at(i)-y.at(i))*((Layers.at(NumberofLayers-1)).dsigmoid()).at(i); // calculate errorfunction
 		Dll.push_back(x); 
 	}
 
 //////// errorfunction of previous layers by recursive prescription
-	vector<float> Dl; // temporary storage for error function of one layer
-	vector<vector<float>> DD = {Dll}; // error function: vector/layer
+	vector<float> Dl;	// temporary storage for error function of one layer
+	vector<vector<float>> DD = {Dll};	// error function: vector/layer
 	for (signed int l = NumberofLayers-2; l>=0; --l) // loop over #layers starting at second last, l=layer
-	{ 
-		//cout << "Calculation error function for layer " << l+1 << endl;
+	{
 		Dl.clear();  //  clear temporary storage
-		//layer L = Layers.at(l);  // call l-th layer out of vector of layers
 		for (unsigned int i=0; i<A.at(l+1).size(); ++i) //loop over #neurons per layer, i=neuron #neuronen = output
 		{  
-			//neuron N = L.Neurons.at(i); // call i-th neuron out of vector of neurons of layer l
-			//N.setBias(B.at(l).at(i)); // set bias of i-th neuron in layer l
-			//N.setWeights(W.at(l).at(i)); // set weights of i-th neuron in layer l	
-			//N.activateFunc(A.at(l)); // calculate z with input of layer l
 			float WD = 0;		
 			for (unsigned int j=0; j<DD.at(0).size(); ++j) // vector multiplication of Wkj*D(l+1)
 			{
@@ -318,7 +298,6 @@ vector<vector<float>> network::errorFunc(const vector<float>& y)// calculates er
 	}
 	return DD;
 }
-
 
 vector<float> network::resultFunc(const vector<float>& Image)	// calculates the result of every layer, returns result last layer
 {  
@@ -334,7 +313,6 @@ vector<float> network::resultFunc(const vector<float>& Image)	// calculates the 
 	return result;	// the result (output) vector of the last layer -> output of network
 }
 
-
 float network::costFunc(const vector<float>& a ,const vector<float>& y)  // Calculates cost function for given y and a. 
 { 
 	float C = 0;
@@ -344,5 +322,3 @@ float network::costFunc(const vector<float>& a ,const vector<float>& y)  // Calc
 	}
 	return C/2;
 }
-
-
