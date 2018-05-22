@@ -13,8 +13,7 @@
 
 //Author: Robbe (& Marjan)=========================================================================
 
-//Constructor for the network class when Weights and biases are loaded from a file
-network::network(const string fileName)
+network::network(const string fileName)	//Constructor for the network class when Weights and biases are loaded from a file
 {
 	cout << "Data loaded from file: " << fileName << '\n';
 	vector<vector<vector<float>>> dataFloat = loadLayers(fileName);
@@ -27,7 +26,7 @@ network::network(const string fileName)
 network::network(const vector<int>& nNeurons, const int nInputs)	//Constructor for the network class when random weights and biases are chosen
 {
 	NumberofLayers = nNeurons.size();
-	
+
 	Layers.push_back(layer(nNeurons.at(0),nInputs));	// First layer of neurons (each neuron gets 'nInputs' input values) 
 	for(int i=1; i < NumberofLayers; ++i)			//Iterates over the layers of the network
 	{ 
@@ -46,6 +45,7 @@ network::network(const network& net)	//Copy constructor
 { 
 	Layers = net.Layers;
 	NumberofLayers = net.NumberofLayers;
+
 }
 
 network& network::operator = (const network& net) //Assigment operator (constructor)
@@ -65,18 +65,18 @@ void network::setWeights(const vector<vector<vector<float>>>& NetworkWeights)	//
 {
 	int count = 0;
 	for_each(Layers.begin(),Layers.end(),[&](layer& Layer)	// For each layer i in the 'Layers' vector
-		{							// change their weights to one of layer i of 'NetworkWeights'.
-			Layer.setWeights(NetworkWeights.at(count++));	// Here is the post-increment of 'count' usefull.
-		});
+	{							// change their weights to one of layer i of 'NetworkWeights'.
+		Layer.setWeights(NetworkWeights.at(count++));	// Here is the post-increment of 'count' usefull.
+	});
 }
 
 void network::setBias(const vector<vector<float>>& NetworkBias)	// sets biases for every layer
 {
 	int count = 0;
 	for_each(Layers.begin(),Layers.end(),[&](layer& Layer)	// For each layer i in the 'Layers' vector
-		 {						// change their biases to one of layer i of 'NetworkBias'.
-			Layer.setBias(NetworkBias.at(count++));	// Here is the post-increment of 'count' usefull.
-		 });
+	{							// change their biases to one of layer i of 'NetworkBias'.
+		Layer.setBias(NetworkBias.at(count++));		// Here is the post-increment of 'count' usefull.
+	});
 }
 
 void network::setNumberofLayers(const int NLayers)	// sets amount of layers in the network
@@ -87,7 +87,6 @@ void network::setNumberofLayers(const int NLayers)	// sets amount of layers in t
 vector<vector<vector<float>>> network::getWeights()
 {
 	vector<vector<vector<float>>> weights;
-	
 	for(int i=0; i < NumberofLayers; ++i)
 	{
 		weights.push_back((Layers.at(i)).getWeights());
@@ -121,6 +120,7 @@ vector<vector<float>> network::getLayerResult()
 
 vector<vector<vector<float>>> network::loadLayers(const string fileName) //Function to load already exsisting weights and bias
 {
+	
 //Load values from a CSV-file as a vector of vectors of strings
         ifstream file(fileName);
         vector<vector<string>> dataString;
@@ -163,7 +163,7 @@ vector<vector<vector<float>>> network::loadLayers(const string fileName) //Funct
         
 	//Evaluating the dimensions of the loaded file        
         vector<float> Dimens = dataFloat.at(0).at(0);
-	
+	//int NInputs = Dimens.at(0);
 	size_t NLayers1 = Dimens.at(1);
         size_t NLayers2 = Dimens.size()-2;
         
@@ -211,6 +211,7 @@ return dataFloat;
 //Author: Tycho=========================================================================
 void network::saveLayers(const string fileName)
 {      
+
 	const char* commaDelim = ",";						// used as delimiter between biases of the same layer and weights of the same neuron
 	const char* newLineDelim = "\n";					// end of line character
 	const size_t nInputs = getWeights().front().front().size(); 		// # weights of first neuron of first layer = # inputs of network
@@ -279,11 +280,12 @@ vector<vector<float>> network::errorFunc(const vector<float>& y)// calculates er
 	}
 
 //////// errorfunction of previous layers by recursive prescription
-	vector<float> Dl;	// temporary storage for error function of one layer
-	vector<vector<float>> DD = {Dll};	// error function: vector/layer
+	vector<float> Dl; // temporary storage for error function of one layer
+	vector<vector<float>> DD = {Dll}; // error function: vector/layer
 	for (signed int l = NumberofLayers-2; l>=0; --l) // loop over #layers starting at second last, l=layer
-	{
+	{ 
 		Dl.clear();  //  clear temporary storage
+		
 		for (unsigned int i=0; i<A.at(l+1).size(); ++i) //loop over #neurons per layer, i=neuron #neuronen = output
 		{  
 			float WD = 0;		
