@@ -42,6 +42,6 @@ class network {
 		vector<layer> Layers;				// The network is constructed out of layer objects which are stored in a vector.
 		int NumberofLayers;				// The amount of layers in the network.
 		vector<vector<float>> LayerResult;	        // The vector of output vectors of each layer. Contains the output of each neuron in each layer including input vector
-		//bool NetworkHasChanged  
+
 };
 #endif // NETWORK_H
