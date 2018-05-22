@@ -314,8 +314,6 @@ void propagate::propagateMiniBatch() // propagate one minibatch
 	deriveWeightsAndBias(SumGradientBias, SumGradientWeights);	// adjust the biases and weights
 }
 
-
-
 void propagate::deriveWeightsAndBias(const vector<vector<float>>& sumGradientBias, const vector<vector<vector<float>>>& sumGradientWeights)
 {
 	vector<vector<float>> newBias = CurrentNetwork.getBias();		// Biases of the network
@@ -341,4 +339,3 @@ void propagate::deriveWeightsAndBias(const vector<vector<float>>& sumGradientBia
 	CurrentNetwork.setBias(newBias);
 	CurrentNetwork.setWeights(newWeights);
 }
-
