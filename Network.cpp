@@ -289,7 +289,7 @@ vector<vector<float>> network::errorFunc(const vector<float>& y)// calculates er
 			float WD = 0;		
 			for (unsigned int j=0; j<DD.at(0).size(); ++j) // vector multiplication of Wkj*D(l+1)
 			{
-				WD = WD + W.at(l).at(j).at(i) * DD.at(0).at(j);  // use always first vector of DD
+				WD = WD + W.at(l+1).at(j).at(i) * DD.at(0).at(j);  // use always first vector of DD
 			}
 
 			Dl.push_back(WD * ((Layers.at(l)).dsigmoid()).at(i)); // add errorfunc for i-th neuron to Dl
