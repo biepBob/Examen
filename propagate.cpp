@@ -10,7 +10,6 @@
 using namespace std;
 
 
-
 // Helper functions ===========================================
 void setAllElementsToOneValue(vector<vector<float>>& multivec, const float value)
 {
@@ -21,7 +20,6 @@ void setAllElementsToOneValue(vector<vector<float>>& multivec, const float value
 			//cout << lowervec.back() << '\n';						
 		});	
 }
-
 
 void setAllElementsToOneValue(vector<vector<vector<float>>>& multivec, const float value)
 {
@@ -61,10 +59,6 @@ void printVec(const vector<vector<vector<float>>>& multivec)
 
 //=============================================================
 
-
-
-
-
 // propagate ==========================================================
 //=====================================================================
 propagate::propagate(float eta, int miniBatchSize,const vector<int>& nNeurons, const int nInputs, const string EvalImageString, const string EvalLabelString, const string TrainImageString,const string TrainLabelString) // constructor
@@ -72,7 +66,7 @@ propagate::propagate(float eta, int miniBatchSize,const vector<int>& nNeurons, c
 { 
     setEta(eta);
     setMiniBatchSize(miniBatchSize);
-    //setTrainingSamples(trainingIn,trainingOut);
+	
     setTrainImages(TrainingBatch);
     setEvalImages(EvaluationBatch);
 }
@@ -82,7 +76,7 @@ propagate::propagate(const string fileName, float eta, int miniBatchSize,  const
 { 
     setEta(eta);
     setMiniBatchSize(miniBatchSize);
-    //setTrainingSamples(trainingIn,trainingOut);
+	
     setTrainImages(TrainingBatch);
     setEvalImages(EvaluationBatch);
 }
@@ -91,21 +85,6 @@ propagate::~propagate() // destructor
 {
 
 }
-
-
-/*propagate::propagate(const propagate& prop) // copy constructor
-{
-   // propagateMiniBatch() = prop.propagateMiniBatch() ????? moet dit ook bij functies?? 
-   MiniBatchSize = prop.MiniBatchSize;
-   Eta = prop.Eta;	
-}
-
-
-propagate& propagate::operator = (const propagate& prop) // assigment operator
-{
-
-}*/
-
 
 //=====================================================================
 void propagate::setEta(float inputEta)
@@ -128,12 +107,10 @@ void propagate::setTrainImages(batch& trainingBatch)
 	TrainImages = trainingBatch.getTestImages();
 }
 
-
 void propagate::setEvalImages(batch& evaluationBatch)
 {
 	EvalImages = evaluationBatch.getTestImages();
 }
-
 
 float propagate::getEta() const
 {
@@ -150,7 +127,6 @@ float propagate::getThreshold() const
     return Threshold;
 }
 
-
 void propagate::loadNetwork(const string fileName)
 {
 	CurrentNetwork.loadLayers(fileName);
@@ -161,14 +137,12 @@ void propagate::saveNetwork(const string fileName)
 	CurrentNetwork.saveLayers(fileName);
 }
 
-
 vector<float> propagate::IntToVec(const float a)
 {
 	vector<float>  L(10,0.0);
-	L.at(a)=1.0;             //vector begint met element 0.
+	L.at(a)=1.0;             //vector begins with element 0.
 	return L;
 }
-
 
 vector<float> propagate::resultFunc(const vector<float>& Input)
 {
@@ -176,11 +150,9 @@ vector<float> propagate::resultFunc(const vector<float>& Input)
 }
 
 vector<vector<float>> propagate::propagateNEpochs(const int N)  // propagate N epochs, returns evalerror, trainingerror, fals negative, false positive, true negatieve, true positive per epoch
-
-// voer na elke epoch een evaluatie uit op testsample: batch evaluationbatch --> bepaal getallen
-// validation error = gemiddelde costfunctie van testsample
-// training error = gemiddelde costfunctie over training data
-// 
+// perform an evaluation on test sample after each epoch: batch evaluationbatch --> determine numbers
+// validation error = mean costfunction of test (evaluation) data
+// training error = mean costfunction of training data
 {
 	cout << "Started propagating " << N << " Epochs" << endl;
 	vector<vector<float>> Data;
@@ -201,25 +173,7 @@ vector<vector<float>> propagate::propagateNEpochs(const int N)  // propagate N e
 	   	 	<< "TrueNegative " << Data.at(i).at(3) << '\n'
 	   	 	<< "FalsePositive " << Data.at(i).at(4) << '\n'
 	   	 	<< "FalseNegative " << Data.at(i).at(5) << '\n';
-
-		saveNetwork("TestPropNet_WeightsAndBias.csv");	
-	}
-	
-	int nImage = 1;
-	cout << "end of propagateEpoch()\n";
-	
-	float number = static_cast<float>(EvalImages.at((nImage))->getRealNumber());
-	vector<float> test = IntToVec(number);
-        CurrentNetwork.resultFunc(EvalImages.at((nImage))->getConcatenatedColumns());
-	cout << "test\n";
-	vector<float> outputNet = CurrentNetwork.getLayerResult().back();
-	
-	cout << "Number of image: ";
-	printVec(test);
-	cout << '\n';
-	cout << "Output of network: ";
-	printVec(outputNet);
-	
+	}	
 	return Data; 
 }
 
@@ -229,40 +183,31 @@ float propagate::propagateEpoch()
 	cout << "Started propagating epoch." << endl;
 	srand(time(0));  	// otherwise everytime the same random shuffle
 
-
 	const int NtrainingSamples = TrainImages.size();  		// number of training samples
 	const int remain = NtrainingSamples % MiniBatchSize; 		// remainder of dividing 'NtrainingSample' by 'MiniBatchSize'
 	const int NusedTrainingSamples = NtrainingSamples-remain;	// the amount of training samples that will be used in this epoch, which is a multiple of MiniBatchSize
-	
-	cout << "NtrainingSamples: " << NtrainingSamples <<'\n';
 
-/////// shuffle mat objects + cijfer in random volgorde
-	ChooseTrainingSample.clear(); // vector met getallen 0 tem length-1, new shuffle every epoch
-    	for (int i=0; i<NusedTrainingSamples; ++i) {
+	// numbers in random sequence
+	ChooseTrainingSample.clear(); // vector of numbers between 0 and 'NusedTrainingSamples'-1, new shuffle every epoch
+    	for (int i=0; i<NusedTrainingSamples; ++i)
+	{
         	ChooseTrainingSample.push_back(i);
     	} 
-
     	std::random_shuffle(ChooseTrainingSample.begin(), ChooseTrainingSample.end()); // random shuffle
 
-/////// verplaats mat objecten : plaats i = Mat[Numbers[i]] batch?  
-    	// vector maken van minibatch? ja
-
-
-	const int Nminibatches = NusedTrainingSamples/MiniBatchSize; 	// number of minibatches
-	//cout << "Nminibatches: " << Nminibatches << '\n';
-
-/////// loop over verschillende minibatches and calculate trainingerror
-	//cout << "g: " << g << '\n';
+	// number of minibatches
+	const int Nminibatches = NusedTrainingSamples/MiniBatchSize;
+	
+	// loop over verschillende minibatches and calculate trainingerror
 	TrainingError = 0;
     	for (int i=0; i<Nminibatches ; ++i)
     	{
-    		//cout << "i: " << i << '\n';
 		propagateMiniBatch();
-		//Numbers.erase(Numbers.begin(),Numbers.begin()+MiniBatchSize-1);  // delete first MiniBatchSize'th images
 		TrainingError = TrainingError + CostMiniBatch;
     	}
 	TrainingError = TrainingError/(static_cast<float>(NusedTrainingSamples));
-        CurrentNetwork.saveLayers("temp.csv");
+        CurrentNetwork.saveLayers("tempBWsaveFile.csv");	// each epoch, the current biases and weights are saved
+	
 	return TrainingError;
 }
 
@@ -286,11 +231,11 @@ vector<float> propagate::evaluate()
 
 		for (size_t j=0; j<a.size(); ++j)
 		{
-			if (a.at(j)<Threshold && y.at(j)==0)
+			if (a.at(j)<Threshold && y.at(j)==0.0)
 				{ ++TN; }
-			else if (a.at(j)<Threshold && y.at(j)!=0)
+			else if (a.at(j)<Threshold && y.at(j)!=0.0)
 				{ ++FN; }
-			else if (a.at(j)>Threshold && y.at(j)!=1)
+			else if (a.at(j)>Threshold && y.at(j)!=1.0)
 				{ ++FP; }
 			else
 				{ ++TP; }
@@ -298,7 +243,6 @@ vector<float> propagate::evaluate()
 	}
 
 	ValidationError = ValidationError/(static_cast<float>(NevalImages));
-
         vector<float> Data = {ValidationError,(float) TP,(float) TN,(float) FP,(float) FN};
 
 	return Data;
@@ -309,17 +253,17 @@ tuple<vector<int>,vector<vector<float>>> propagate::evaluateHistogram()
 	const size_t NevalImages = EvalImages.size();
     	vector<int> listNumbers;
     	vector<vector<float>> outputs;
-    	for (size_t i=0; i<NevalImages; ++i)
+    	
+	for (size_t i=0; i<NevalImages; ++i)
    	{
 		outputs.push_back(CurrentNetwork.resultFunc(EvalImages.at(i)->getConcatenatedColumns()));
 		listNumbers.push_back(EvalImages.at(i)->getRealNumber());
     	}
-    return make_tuple(listNumbers,outputs);
+	return make_tuple(listNumbers,outputs);
 }
 
 void propagate::propagateMiniBatch() // propagate one minibatch
 {
-	
 	const float startingValue = 0.0;
 	
 	vector<vector<float>> SumGradientBias = CurrentNetwork.getBias();	// now 'SumGradientBias' has the same structure as the bias vector
@@ -327,10 +271,9 @@ void propagate::propagateMiniBatch() // propagate one minibatch
 	
 	vector<vector<vector<float>>> SumGradientWeights = CurrentNetwork.getWeights();	// now 'SumGradientWeights' has the same structure as the weights vector
 	setAllElementsToOneValue(SumGradientWeights,startingValue);			// All elements of 'SumGradientWeights' are now 0
-		
+	
 
-	const int Nlayers = CurrentNetwork.getNumberofLayers();		// The amount of layers in the network
-
+	const int Nlayers = CurrentNetwork.getNumberofLayers();	// The amount of layers in the network
 
 	CostMiniBatch = 0;
 	for (int iSample=0 ; iSample<MiniBatchSize ; ++iSample)   // loop over all training samples in one minibatch
@@ -340,19 +283,18 @@ void propagate::propagateMiniBatch() // propagate one minibatch
 		
 		float numOut = static_cast<float>(TrainImages.at(ChooseTrainingSample.back())->getRealNumber());
 		vector<float> TrainingSampleOut = IntToVec(numOut);								// Current training sample output
-		ChooseTrainingSample.pop_back();							// This training sample index will not be used again (in this epoch)
+		ChooseTrainingSample.pop_back();			// This training sample index will not be used again (in this epoch)
 	
 		// Calculate output and errorfunction of all neurons in the network
 		CurrentNetwork.resultFunc(TrainingSampleIN);				// calculates the output of all neurons in the network
 		vector<vector<float>> layersOutput = CurrentNetwork.getLayerResult();	// contains the ouput of all neurons in the network for the current training sample
 		vector<vector<float>> Error = CurrentNetwork.errorFunc(TrainingSampleOut); // contains errorfunction of all neurons in the network for the current training sample
-
 		
-		CostMiniBatch += CurrentNetwork.costFunc(layersOutput.back(),TrainingSampleOut); // Cost function of training sample added to total cost of minibatch (x +=5 -> x = x + 5)
+		// Cost function of training sample added to total cost of minibatch
+		CostMiniBatch += CurrentNetwork.costFunc(layersOutput.back(),TrainingSampleOut); // (x +=5 -> x = x + 5)
 	
 		for (int jlayer=0 ; jlayer<Nlayers ; ++jlayer)	// For each layer j
 		{
-		
 			const int Nneurons = (Error.at(jlayer)).size();		// Amount of neurons in layer j
 			for (int kneuron=0 ; kneuron<Nneurons ; ++kneuron)	// For each neuron k in layer j
 			{
